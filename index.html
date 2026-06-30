@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 CyberSec Tools - أدوات الأمن السيبراني</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A0E27;
+            --bg-secondary: #111936;
+            --bg-card: #151D3B;
+            --neon-cyan: #00F0FF;
+            --neon-green: #00FF88;
+            --neon-red: #FF2A6D;
+            --neon-purple: #B829DD;
+            --neon-yellow: #FFD700;
+            --text-primary: #E0E6F1;
+            --text-secondary: #8B9DC3;
+            --border-glow: rgba(0, 240, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Matrix Rain Background */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 240, 255, 0.03) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 1;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+            animation: glitch-skew 3s infinite;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-red);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--neon-cyan);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim-2 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 15px, 0); }
+            20% { clip: rect(50px, 9999px, 80px, 0); }
+            40% { clip: rect(10px, 9999px, 90px, 0); }
+            60% { clip: rect(70px, 9999px, 30px, 0); }
+            80% { clip: rect(40px, 9999px, 60px, 0); }
+            100% { clip: rect(90px, 9999px, 20px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(60px, 9999px, 10px, 0); }
+            20% { clip: rect(30px, 9999px, 70px, 0); }
+            40% { clip: rect(80px, 9999px, 40px, 0); }
+            60% { clip: rect(20px, 9999px, 90px, 0); }
+            80% { clip: rect(50px, 9999px, 30px, 0); }
+            100% { clip: rect(10px, 9999px, 80px, 0); }
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(-2deg); }
+            20% { transform: skew(2deg); }
+            30% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-glow);
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; box-shadow: 0 0 10px var(--neon-cyan); }
+            50% { opacity: 1; box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .typing-effect {
+            overflow: hidden;
+            border-left: 2px solid var(--neon-cyan);
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--neon-cyan); }
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            padding: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        /* Tool Sections */
+        .tool-section {
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .tool-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple), var(--neon-red), var(--neon-cyan));
+            border-radius: 16px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s;
+            filter: blur(10px);
+        }
+
+        .card:hover::before {
+            opacity: 0.3;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.1);
+            border-color: var(--neon-cyan);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Input Styles */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cyber-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .cyber-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0, 240, 255, 0.05);
+        }
+
+        .cyber-input::placeholder {
+            color: rgba(139, 157, 195, 0.5);
+        }
+
+        textarea.cyber-input {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        select.cyber-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300F0FF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            padding-left: 35px;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cyber-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cyber-btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: var(--bg-primary);
+        }
+
+        .cyber-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(0, 240, 255, 0.4);
+        }
+
+        .cyber-btn-secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .cyber-btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .cyber-btn-danger {
+            background: linear-gradient(135deg, var(--neon-red), #FF6B6B);
+            color: white;
+        }
+
+        .cyber-btn-danger:hover {
+            box-shadow: 0 5px 25px rgba(255, 42, 109, 0.4);
+        }
+
+        .cyber-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cyber-btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Output Area */
+        .output-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            min-height: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--neon-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .output-area::before {
+            content: '>';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
+
+        .output-area.empty {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .output-area.error {
+            color: var(--neon-red);
+            border-color: var(--neon-red);
+        }
+
+        .output-area.success {
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+        /* Strength Meter */
+        .strength-meter {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+            width: 0%;
+        }
+
+        .strength-weak { background: var(--neon-red); width: 25%; }
+        .strength-fair { background: var(--neon-yellow); width: 50%; }
+        .strength-good { background: var(--neon-cyan); width: 75%; }
+        .strength-strong { background: var(--neon-green); width: 100%; }
+
+        .strength-text {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Threat Map */
+        .threat-map-container {
+            width: 100%;
+            height: 500px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #threat-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 14, 39, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--neon-cyan);
+            min-width: 200px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: var(--neon-red);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Checklist */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checklist-item:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .checklist-item.checked {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .checklist-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .checklist-item.checked .checklist-checkbox {
+            background: var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+        .checklist-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .checklist-item.checked .checklist-text {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .checklist-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        .cat-network { background: rgba(0, 240, 255, 0.2); color: var(--neon-cyan); }
+        .cat-app { background: rgba(184, 41, 221, 0.2); color: var(--neon-purple); }
+        .cat-data { background: rgba(0, 255, 136, 0.2); color: var(--neon-green); }
+        .cat-physical { background: rgba(255, 215, 0, 0.2); color: var(--neon-yellow); }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow), var(--neon-green));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Terminal */
+        .terminal {
+            background: #000;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: terminal-type 0.1s forwards;
+        }
+
+        @keyframes terminal-type {
+            to { opacity: 1; }
+        }
+
+        .terminal-prompt {
+            color: var(--neon-cyan);
+        }
+
+        .terminal-success {
+            color: var(--neon-green);
+        }
+
+        .terminal-error {
+            color: var(--neon-red);
+        }
+
+        .terminal-info {
+            color: var(--neon-yellow);
+        }
+
+        /* Port Grid */
+        .port-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .port-item {
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .port-item.open {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .port-item.closed {
+            border-color: var(--neon-red);
+            background: rgba(255, 42, 109, 0.1);
+            color: var(--neon-red);
+            opacity: 0.6;
+        }
+
+        .port-item.scanning {
+            animation: pulse-port 1s infinite;
+        }
+
+        @keyframes pulse-port {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 6px;
+            color: var(--neon-cyan);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-primary);
+        }
+
+        .copy-btn.copied {
+            background: var(--neon-green);
+            border-color: var(--neon-green);
+            color: var(--bg-primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-glow);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .footer-link {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .nav-tabs { gap: 5px; }
+            .nav-tab { padding: 10px 16px; font-size: 0.85rem; }
+            .threat-map-container { height: 350px; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-purple);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 240, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--neon-cyan);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            padding: 15px 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--neon-green);
+            border-radius: 10px;
+            color: var(--neon-green);
+            font-weight: 700;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .notification.error {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            box-shadow: 0 5px 25px rgba(255, 42, 109, 0.2);
+        }
+
+        /* IP Info Grid */
+        .ip-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .ip-info-item {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .ip-info-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .ip-info-value {
+            font-size: 1rem;
+            color: var(--neon-cyan);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Hex Converter Grid */
+        .hex-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .hex-grid { grid-template-columns: 1fr; }
+        }
+
+        .hex-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--neon-cyan);
+        }
+
+        /* Pulse Animation for Live Elements */
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: live-pulse 2s infinite;
+        }
+
+        @keyframes live-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--neon-red); }
+            50% { opacity: 0.5; box-shadow: 0 0 15px var(--neon-red); }
+        }
+
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .range-value {
+            text-align: center;
+            margin-top: 8px;
+            color: var(--neon-cyan);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <!-- Scanlines Overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="logo glitch" data-text="🔒 CYBERSEC TOOLS">🔒 CYBERSEC TOOLS</div>
+            <div class="subtitle">
+                <span class="typing-effect">أدوات الأمن السيبراني المتقدمة | Advanced Cybersecurity Tools</span>
+            </div>
+            <div style="margin-top: 15px; font-size: 0.85rem; color: var(--neon-cyan);">
+                <span class="live-indicator"></span> النظام نشط | System Active
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('password')">🔐 كلمة المرور</button>
+            <button class="nav-tab" onclick="showSection('hash')"># Hash</button>
+            <button class="nav-tab" onclick="showSection('base64')">🔡 Base64</button>
+            <button class="nav-tab" onclick="showSection('url')">🔗 URL</button>
+            <button class="nav-tab" onclick="showSection('ip')">🌐 IP Lookup</button>
+            <button class="nav-tab" onclick="showSection('port')">📡 Port Scan</button>
+            <button class="nav-tab" onclick="showSection('jwt')">🎫 JWT</button>
+            <button class="nav-tab" onclick="showSection('hex')">🔢 Hex</button>
+            <button class="nav-tab" onclick="showSection('threat')">🗺️ Threat Map</button>
+            <button class="nav-tab" onclick="showSection('checklist')">✅ Checklist</button>
+        </nav>
+
+        <!-- Password Section -->
+        <section id="password" class="tool-section active">
+            <h2 class="section-title">🔐 محلل ومنشئ كلمات المرور</h2>
+            <div class="cards-grid">
+                <!-- Password Analyzer -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔍</div>
+                        <div class="card-title">تحليل قوة كلمة المرور</div>
+                    </div>
+                    <div class="card-description">أدخل كلمة المرور لتحليل قوتها والحصول على توصيات لتحسينها</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">كلمة المرور:</label>
+                        <input type="text" class="cyber-input" id="password-input" placeholder="أدخل كلمة المرور هنا..." oninput="analyzePassword()">
+                    </div>
+                    
+                    <div class="strength-meter">
+                        <div class="strength-bar" id="strength-bar"></div>
+                    </div>
+                    <div class="strength-text" id="strength-text">أدخل كلمة مرور للتحليل</div>
+                    
+                    <div class="output-area empty" id="password-analysis" style="margin-top: 15px;">
+                        سيتم عرض التحليل التفصيلي هنا...
+                    </div>
+                </div>
+
+                <!-- Password Generator -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-title">منشئ كلمات المرور</div>
+                    </div>
+                    <div class="card-description">أنشئ كلمات مرور قوية وآمنة بمواصفات مخصصة</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">الطول: <span class="range-value" id="pass-length-val">16</span></label>
+                        <input type="range" min="8" max="64" value="16" id="pass-length" oninput="document.getElementById('pass-length-val').textContent = this.value">
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="use-upper" checked style="accent-color: var(--neon-cyan);">
+                            <span style="font-size: 0.9rem;">أحرف كبيرة</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="use-lower" checked style="accent-color: var(--neon-cyan);">
+                            <span style="font-size: 0.9rem;">أحرف صغيرة</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="use-numbers" checked style="accent-color: var(--neon-cyan);">
+                            <span style="font-size: 0.9rem;">أرقام</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="use-symbols" checked style="accent-color: var(--neon-cyan);">
+                            <span style="font-size: 0.9rem;">رموز</span>
+                        </label>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="generatePassword()">
+                            ⚡ إنشاء
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="copyToClipboard('generated-password')">
+                            📋 نسخ
+                        </button>
+                    </div>
+                    
+                    <div class="output-area" id="generated-password" style="margin-top: 15px;">
+                        اضغط "إنشاء" لتوليد كلمة مرور...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hash Section -->
+        <section id="hash" class="tool-section">
+            <h2 class="section-title"># Hash Generator</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">#</div>
+                        <div class="card-title">توليد Hash</div>
+                    </div>
+                    <div class="card-description">حول أي نص إلى Hash باستخدام خوارزميات التشفير المختلفة</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">النص المدخل:</label>
+                        <textarea class="cyber-input" id="hash-input" placeholder="أدخل النص هنا..."></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">الخوارزمية:</label>
+                        <select class="cyber-input" id="hash-algo">
+                            <option value="MD5">MD5</option>
+                            <option value="SHA-1">SHA-1</option>
+                            <option value="SHA-256" selected>SHA-256</option>
+                            <option value="SHA-384">SHA-384</option>
+                            <option value="SHA-512">SHA-512</option>
+                        </select>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="generateHash()">
+                            🔐 توليد Hash
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="copyToClipboard('hash-output')">
+                            📋 نسخ
+                        </button>
+                        <button class="cyber-btn cyber-btn-danger" onclick="clearHash()">
+                            🗑️ مسح
+                        </button>
+                    </div>
+                    
+                    <div class="output-area" id="hash-output" style="margin-top: 15px; word-break: break-all;">
+                        النتيجة ستظهر هنا...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Base64 Section -->
+        <section id="base64" class="tool-section">
+            <h2 class="section-title">🔡 Base64 Encoder/Decoder</h2>
+            <div class="cards-grid">
+                <!-- Encoder -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔒</div>
+                        <div class="card-title">Base64 Encoder</div>
+                    </div>
+                    <div class="card-description">شفر النص إلى Base64</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">النص العادي:</label>
+                        <textarea class="cyber-input" id="b64-encode-input" placeholder="أدخل النص للتشفير..."></textarea>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="base64Encode()">
+                            🔒 تشفير
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="copyToClipboard('b64-encode-output')">
+                            📋 نسخ
+                        </button>
+                    </div>
+                    
+                    <div class="output-area" id="b64-encode-output" style="margin-top: 15px; word-break: break-all;">
+                        النتيجة ستظهر هنا...
+                    </div>
+                </div>
+
+                <!-- Decoder -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔓</div>
+                        <div class="card-title">Base64 Decoder</div>
+                    </div>
+                    <div class="card-description">فك تشفير Base64 إلى نص عادي</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">نص Base64:</label>
+                        <textarea class="cyber-input" id="b64-decode-input" placeholder="أدخل نص Base64..."></textarea>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="base64Decode()">
+                            🔓 فك التشفير
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="copyToClipboard('b64-decode-output')">
+                            📋 نسخ
+                        </button>
+                    </div>
+                    
+                    <div class="output-area" id="b64-decode-output" style="margin-top: 15px;">
+                        النتيجة ستظهر هنا...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- URL Section -->
+        <section id="url" class="tool-section">
+            <h2 class="section-title">🔗 URL Encoder/Decoder</h2>
+            <div class="cards-grid">
+                <!-- URL Encoder -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔒</div>
+                        <div class="card-title">URL Encoder</div>
+                    </div>
+                    <div class="card-description">شفر الرابط أو النص لاستخدامه في URLs</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">النص:</label>
+                        <textarea class="cyber-input" id="url-encode-input" placeholder="أدخل النص للتشفير..."></textarea>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="urlEncode()">
+                            🔒 تشفير
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="copyToClipboard('url-encode-output')">
+                            📋 نسخ
+                        </button>
+                    </div>
+                    
+                    <div class="output-area" id="url-encode-output" style="margin-top: 15px; word-break: break-all;">
+                        النتيجة ستظهر هنا...
+                    </div>
+                </div>
+
+                <!-- URL Decoder -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔓</div>
+                        <div class="card-title">URL Decoder</div>
+                    </div>
+                    <div class="card-description">فك تشفير النص المشفر في URLs</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">النص المشفر:</label>
+                        <textarea class="cyber-input" id="url-decode-input" placeholder="أدخل النص المشفر..."></textarea>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="urlDecode()">
+                            🔓 فك التشفير
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="copyToClipboard('url-decode-output')">
+                            📋 نسخ
+                        </button>
+                    </div>
+                    
+                    <div class="output-area" id="url-decode-output" style="margin-top: 15px;">
+                        النتيجة ستظهر هنا...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IP Lookup Section -->
+        <section id="ip" class="tool-section">
+            <h2 class="section-title">🌐 IP Lookup</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">🌐</div>
+                        <div class="card-title">معلومات عنوان IP</div>
+                    </div>
+                    <div class="card-description">احصل على معلومات مفصلة عن أي عنوان IP (محاكاة - البيانات تجريبية)</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">عنوان IP:</label>
+                        <input type="text" class="cyber-input" id="ip-input" placeholder="مثال: 192.168.1.1 أو 8.8.8.8" value="8.8.8.8">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="lookupIP()">
+                            🔍 بحث
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="document.getElementById('ip-input').value = ''; document.getElementById('ip-info').innerHTML = '';">
+                            🗑️ مسح
+                        </button>
+                    </div>
+                    
+                    <div id="ip-info" style="margin-top: 20px;">
+                        <!-- IP info will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Port Scan Section -->
+        <section id="port" class="tool-section">
+            <h2 class="section-title">📡 Port Scanner</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">📡</div>
+                        <div class="card-title">فحص المنافذ</div>
+                    </div>
+                    <div class="card-description">فحص شائع للمنافذ (محاكاة - لا يتم إرسال حزم حقيقية)</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">الهدف (IP أو Domain):</label>
+                        <input type="text" class="cyber-input" id="port-target" placeholder="مثال: 192.168.1.1 أو google.com" value="127.0.0.1">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="scanPorts()">
+                            📡 بدء الفحص
+                        </button>
+                        <button class="cyber-btn cyber-btn-danger" onclick="stopScan()">
+                            ⏹️ إيقاف
+                        </button>
+                    </div>
+                    
+                    <div class="terminal" id="port-terminal" style="margin-top: 20px;">
+                        <div class="terminal-line terminal-prompt">$ portscan --ready</div>
+                        <div class="terminal-line terminal-info">أدخل الهدف واضغط "بدء الفحص"</div>
+                    </div>
+                    
+                    <div class="port-grid" id="port-results" style="margin-top: 20px;">
+                        <!-- Port results will appear here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JWT Section -->
+        <section id="jwt" class="tool-section">
+            <h2 class="section-title">🎫 JWT Decoder</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">🎫</div>
+                        <div class="card-title">فك وتحليل JWT Token</div>
+                    </div>
+                    <div class="card-description">أدخل JWT Token لفك الهيدر والبايلود والتوقيع</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">JWT Token:</label>
+                        <textarea class="cyber-input" id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="cyber-btn cyber-btn-primary" onclick="decodeJWT()">
+                            🔓 فك التشفير
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" onclick="clearJWT()">
+                            🗑️ مسح
+                        </button>
+                    </div>
+                    
+                    <div id="jwt-output" style="margin-top: 20px;">
+                        <!-- JWT parts will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hex Section -->
+        <section id="hex" class="tool-section">
+            <h2 class="section-title">🔢 Hex Converter</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">🔢</div>
+                        <div class="card-title">محول الأنظمة العددية</div>
+                    </div>
+                    <div class="card-description">تحويل بين Hex, Binary, Decimal, و ASCII Text</div>
+                    
+                    <div class="hex-grid">
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Hex:</label>
+                                <textarea class="cyber-input" id="hex-input" placeholder="48656c6c6f" oninput="convertFromHex()"></textarea>
+                            </div>
+                        </div>
+                        <div class="hex-arrow">⬇️</div>
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Binary:</label>
+                                <textarea class="cyber-input" id="binary-input" placeholder="01001000..." oninput="convertFromBinary()"></textarea>
+                            </div>
+                        </div>
+                        <div class="hex-arrow">⬇️</div>
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Decimal:</label>
+                                <textarea class="cyber-input" id="decimal-input" placeholder="72 101 108..." oninput="convertFromDecimal()"></textarea>
+                            </div>
+                        </div>
+                        <div class="hex-arrow">⬇️</div>
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">ASCII Text:</label>
+                                <textarea class="cyber-input" id="ascii-input" placeholder="Hello" oninput="convertFromASCII()"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="cyber-btn cyber-btn-danger" onclick="clearHex()">
+                            🗑️ مسح الكل
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Threat Map Section -->
+        <section id="threat" class="tool-section">
+            <h2 class="section-title">🗺️ Cyber Threat Map</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">🗺️</div>
+                        <div class="card-title">خريطة الهجمات السيبرانية المباشرة <span class="live-indicator"></span></div>
+                    </div>
+                    <div class="card-description">محاكاة لخريطة الهجمات السيبرانية العالمية في الوقت الفعلي</div>
+                    
+                    <div class="threat-map-container">
+                        <canvas id="threat-map"></canvas>
+                        <div class="map-stats">
+                            <div class="stat-item">
+                                <span>الهجمات اليوم:</span>
+                                <span class="stat-value" id="attacks-today">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>الهجمات النشطة:</span>
+                                <span class="stat-value" id="active-attacks">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>أعلى مصدر:</span>
+                                <span class="stat-value" id="top-source">--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>أعلى هدف:</span>
+                                <span class="stat-value" id="top-target">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 15px;">
+                        <button class="cyber-btn cyber-btn-primary" onclick="initThreatMap()">
+                            🔄 تحديث
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Checklist Section -->
+        <section id="checklist" class="tool-section">
+            <h2 class="section-title">✅ Security Checklist</h2>
+            <div class="cards-grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-icon">✅</div>
+                        <div class="card-title">قائمة فحص الأمن السيبراني</div>
+                    </div>
+                    <div class="card-description">تحقق من إجراءات الأمن الأساسية لنظامك أو موقعك</div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="checklist-progress" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-text" id="checklist-percent">0% مكتمل</div>
+                    </div>
+                    
+                    <div id="checklist-container">
+                        <!-- Checklist items will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🔒 CyberSec Tools | أدوات الأمن السيبراني</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">جميع العمليات تتم محلياً في المتصفح - لا يتم إرسال بياناتك إلى أي خادم</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الرئيسية</a>
+                <a href="#" class="footer-link">عن الموقع</a>
+                <a href="#" class="footer-link">الخصوصية</a>
+                <a href="#" class="footer-link">GitHub</a>
+            </div>
+            <p style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--neon-cyan);">
+                &lt;/&gt; with 💙 by CyberSec Tools
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ==================== MATRIX RAIN ====================
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const matrixChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 14, 39, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00F0FF';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ==================== NAVIGATION ====================
+        function showSection(sectionId) {
+            document.querySelectorAll('.tool-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (sectionId === 'threat') {
+                setTimeout(initThreatMap, 100);
+            }
+            if (sectionId === 'checklist') {
+                initChecklist();
+            }
+        }
+
+        // ==================== NOTIFICATION ====================
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = 'notification show ' + (type === 'error' ? 'error' : '');
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==================== COPY TO CLIPBOARD ====================
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent || element.value;
+            
+            if (text && text !== 'النتيجة ستظهر هنا...' && text !== 'اضغط "إنشاء" لتوليد كلمة مرور...' && text !== 'سيتم عرض التحليل التفصيلي هنا...') {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('✅ تم النسخ إلى الحافظة!');
+                }).catch(() => {
+                    // Fallback
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showNotification('✅ تم النسخ إلى الحافظة!');
+                });
+            } else {
+                showNotification('❌ لا يوجد محتوى للنسخ!', 'error');
+            }
+        }
+
+        // ==================== PASSWORD ANALYZER ====================
+        function analyzePassword() {
+            const password = document.getElementById('password-input').value;
+            const bar = document.getElementById('strength-bar');
+            const text = document.getElementById('strength-text');
+            const analysis = document.getElementById('password-analysis');
+            
+            if (!password) {
+                bar.className = 'strength-bar';
+                bar.style.width = '0%';
+                text.textContent = 'أدخل كلمة مرور للتحليل';
+                text.style.color = 'var(--text-secondary)';
+                analysis.textContent = 'سيتم عرض التحليل التفصيلي هنا...';
+                analysis.className = 'output-area empty';
+                return;
+            }
+            
+            let score = 0;
+            let feedback = [];
+            
+            if (password.length >= 8) score++;
+            else feedback.push('❌ الطول يجب أن يكون 8 أحرف على الأقل');
+            
+            if (password.length >= 12) score++;
+            
+            if (/[A-Z]/.test(password)) score++;
+            else feedback.push('❌ أضف أحرف كبيرة (A-Z)');
+            
+            if (/[a-z]/.test(password)) score++;
+            else feedback.push('❌ أضف أحرف صغيرة (a-z)');
+            
+            if (/[0-9]/.test(password)) score++;
+            else feedback.push('❌ أضف أرقام (0-9)');
+            
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            else feedback.push('❌ أضف رموز خاصة (!@#$%)');
+            
+            if (password.length >= 16) score++;
+            
+            bar.className = 'strength-bar';
+            if (score <= 2) {
+                bar.classList.add('strength-weak');
+                text.textContent = 'ضعيفة جداً ⚠️';
+                text.style.color = 'var(--neon-red)';
+            } else if (score <= 4) {
+                bar.classList.add('strength-fair');
+                text.textContent = 'متوسطة ⚡';
+                text.style.color = 'var(--neon-yellow)';
+            } else if (score <= 6) {
+                bar.classList.add('strength-good');
+                text.textContent = 'جيدة ✅';
+                text.style.color = 'var(--neon-cyan)';
+            } else {
+                bar.classList.add('strength-strong');
+                text.textContent = 'قوية جداً 🛡️';
+                text.style.color = 'var(--neon-green)';
+            }
+            
+            const entropy = Math.log2(Math.pow(95, password.length)).toFixed(1);
+            const timeToCrack = estimateCrackTime(password);
+            
+            analysis.innerHTML = `
+                <div style="margin-bottom: 10px;"><strong>📊 التحليل:</strong></div>
+                <div>الطول: ${password.length} أحرف</div>
+                <div>الإنتروبيا: ${entropy} bits</div>
+                <div>الوقت المقدر للكسر: ${timeToCrack}</div>
+                <div style="margin-top: 10px;"><strong>💡 التوصيات:</strong></div>
+                ${feedback.length > 0 ? feedback.join('<br>') : '✅ كلمة المرور تلبي جميع المعايير!'}
+            `;
+            analysis.className = 'output-area success';
+        }
+
+        function estimateCrackTime(password) {
+            const combinations = Math.pow(95, password.length);
+            const guessesPerSecond = 100000000000; // 100 billion/sec
+            const seconds = combinations / guessesPerSecond;
+            
+            if (seconds < 60) return 'أقل من دقيقة';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)} دقيقة`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)} ساعة`;
+            if (seconds < 31536000) return `${Math.floor(seconds / 86400)} يوم`;
+            if (seconds < 3153600000) return `${Math.floor(seconds / 31536000)} سنة`;
+            return 'ملايين السنين';
+        }
+
+        // ==================== PASSWORD GENERATOR ====================
+        function generatePassword() {
+            const length = parseInt(document.getElementById('pass-length').value);
+            const useUpper = document.getElementById('use-upper').checked;
+            const useLower = document.getElementById('use-lower').checked;
+            const useNumbers = document.getElementById('use-numbers').checked;
+            const useSymbols = document.getElementById('use-symbols').checked;
+            
+            let chars = '';
+            if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (useNumbers) chars += '0123456789';
+            if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            if (chars === '') {
+                showNotification('❌ اختر نوع واحد على الأقل من الأحرف!', 'error');
+                return;
+            }
+            
+            let password = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+            
+            for (let i = 0; i < length; i++) {
+                password += chars[array[i] % chars.length];
+            }
+            
+            const output = document.getElementById('generated-password');
+            output.textContent = password;
+            output.className = 'output-area success';
+            
+            showNotification('✅ تم إنشاء كلمة المرور!');
+        }
+
+        // ==================== HASH GENERATOR ====================
+        async function generateHash() {
+            const input = document.getElementById('hash-input').value;
+            const algo = document.getElementById('hash-algo').value;
+            const output = document.getElementById('hash-output');
+            
+            if (!input) {
+                showNotification('❌ أدخل نصاً للتشفير!', 'error');
+                return;
+            }
+            
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            
+            let hashBuffer;
+            switch(algo) {
+                case 'MD5':
+                    // MD5 using a simple implementation
+                    hashBuffer = await md5(input);
+                    output.textContent = hashBuffer;
+                    break;
+                case 'SHA-1':
+                    hashBuffer = await crypto.subtle.digest('SHA-1', data);
+                    output.textContent = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    break;
+                case 'SHA-256':
+                    hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                    output.textContent = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    break;
+                case 'SHA-384':
+                    hashBuffer = await crypto.subtle.digest('SHA-384', data);
+                    output.textContent = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    break;
+                case 'SHA-512':
+                    hashBuffer = await crypto.subtle.digest('SHA-512', data);
+                    output.textContent = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    break;
+            }
+            
+            output.className = 'output-area success';
+            showNotification('✅ تم توليد الـ Hash!');
+        }
+
+        // Simple MD5 implementation
+        function md5(string) {
+            function rotateLeft(lValue, iShiftBits) {
+                return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+            }
+            function addUnsigned(lX, lY) {
+                var lX4, lY4, lX8, lY8, lResult;
+                lX8 = (lX & 0x80000000);
+                lY8 = (lY & 0x80000000);
+                lX4 = (lX & 0x40000000);
+                lY4 = (lY & 0x40000000);
+                lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
+                if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+                if (lX4 | lY4) {
+                    if (lResult & 0x40000000) return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+                    else return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+                } else {
+                    return (lResult ^ lX8 ^ lY8);
+                }
+            }
+            function f(x, y, z) { return (x & y) | ((~x) & z); }
+            function g(x, y, z) { return (x & z) | (y & (~z)); }
+            function h(x, y, z) { return (x ^ y ^ z); }
+            function i(x, y, z) { return (y ^ (x | (~z))); }
+            function ff(a, b, c, d, x, s, ac) {
+                a = addUnsigned(a, addUnsigned(addUnsigned(f(b, c, d), x), ac));
+                return addUnsigned(rotateLeft(a, s), b);
+            }
+            function gg(a, b, c, d, x, s, ac) {
+                a = addUnsigned(a, addUnsigned(addUnsigned(g(b, c, d), x), ac));
+                return addUnsigned(rotateLeft(a, s), b);
+            }
+            function hh(a, b, c, d, x, s, ac) {
+                a = addUnsigned(a, addUnsigned(addUnsigned(h(b, c, d), x), ac));
+                return addUnsigned(rotateLeft(a, s), b);
+            }
+            function ii(a, b, c, d, x, s, ac) {
+                a = addUnsigned(a, addUnsigned(addUnsigned(i(b, c, d), x), ac));
+                return addUnsigned(rotateLeft(a, s), b);
+            }
+            function convertToWordArray(string) {
+                var lWordCount;
+                var lMessageLength = string.length;
+                var lNumberOfWordsTemp1 = lMessageLength + 8;
+                var lNumberOfWordsTemp2 = (lNumberOfWordsTemp1 - (lNumberOfWordsTemp1 % 64)) / 64;
+                var lNumberOfWords = (lNumberOfWordsTemp2 + 1) * 16;
+                var lWordArray = new Array(lNumberOfWords - 1);
+                var lBytePosition = 0;
+                var lByteCount = 0;
+                while (lByteCount < lMessageLength) {
+                    lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+                    lBytePosition = (lByteCount % 4) * 8;
+                    lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
+                    lByteCount++;
+                }
+                lWordCount = (lByteCount - (lByteCount % 4)) / 4
